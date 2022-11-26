@@ -73,25 +73,27 @@ def enter_third():
     third.resizable(False, False)
     third.config(bg=dark)
 
-    bigframe = LabelFrame(third, padx=10, pady=10)
+    x = dark
+
+    bigframe = LabelFrame(third, bg=light, border=0, padx=10, pady=10)
     bigframe.pack(padx=10, pady=10)
-    frame = LabelFrame(bigframe, text="Camera Views", padx=5, pady=5)
+    frame = LabelFrame(bigframe, text="", border=0, bg=dark, fg=dark, padx=5, pady=5)
     frame.grid(row=0, column=0, padx=10, pady=10)
-    frame2 = LabelFrame(bigframe, text="Log", padx=5, pady=5)
-    frame2.grid(row=0, column=1, padx=10, pady=10)
+    frame2 = LabelFrame(bigframe, text="Log", bg=light, fg=dark, padx=5, pady=5)
+    frame2.grid(row=0, column=1, padx=10, pady=10, sticky=N+S)
 
     #images
     
     # car = Image.open("Authenticator\car.png")
     # resize_car = car.resize((400, 220))
     # car = ImageTk.PhotoImage(resize_car)
-    Label(frame, text="Vehicle Entry View", bg=light).grid(row=1, column=0, sticky=E+W, columnspan=2)
+    Label(frame, text="Vehicle Entry View", bg=x, fg=light, border=0, relief=FLAT, pady=5).grid(row=1, column=0, sticky=E+W, columnspan=2)
     # Label(frame, image=car, bg=light).grid(row=2, column=0)
 
-    app = Frame(frame, bg="white")
+    app = Frame(frame, bg=x, highlightbackground=dark)
     app.grid(row=2, column=0, columnspan=2)
     # Create a label in the frame
-    lmain = Label(app)
+    lmain = Label(app, bg=x)
     lmain.grid(row=2, column=0, columnspan=2)
 
     # video
@@ -144,8 +146,8 @@ def enter_third():
         root.mainloop()
 
     
-    Button(frame, text="Number Plate View", bg=buttoncol, border=0, fg=light, pady=5, command=enter_roi).grid(row=3, column=0, pady=10)
-    Button(frame, text="Exit", bg=buttoncol, border=0, fg=light, pady=5, padx=40, command=exit_third).grid(row=3, column=1, pady=10)
+    Button(frame, text="Number Plate View", bg=buttoncol, border=0, fg=light, pady=5, padx=5, command=enter_roi).grid(row=3, column=0, pady=10)
+    Button(frame, text="Exit", bg=buttoncol, border=0, fg=light, pady=5, padx=45, command=exit_third).grid(row=3, column=1, pady=10)
     video_stream()
     #table ----------------------------
 
@@ -160,7 +162,7 @@ def enter_third():
 
     # Using treeview widget
     trv = ttk.Treeview(frame2, selectmode ='browse')
-    trv.grid(row=1,column=1,padx=20,pady=20)
+    trv.grid(row=1,column=1,padx=20,pady=20, sticky=N+S)
     # number of columns
     trv["columns"] = ("1", "2", "3", "4")
     
