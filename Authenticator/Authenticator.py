@@ -1,8 +1,10 @@
-from tkinter import Tk, ttk, Label, Frame, LabelFrame, Entry, LEFT, Button, CENTER, SUNKEN, E, W, END
+from tkinter import *
 from tkinter import messagebox
+from tkinter import ttk
 from PIL import Image, ImageTk
 import tkinter as tk
 import pygsheets
+import cv2
 
 
 # color data ------------------------
@@ -68,7 +70,8 @@ def enter_second():
 def enter_third():
     third = Tk()
     third.title("Automated Parking System")
-    third.config(bg="")
+    third.resizable(False, False)
+    third.config(bg=dark)
 
     bigframe = LabelFrame(third, padx=10, pady=10)
     bigframe.pack(padx=10, pady=10)
@@ -78,21 +81,73 @@ def enter_third():
     frame2.grid(row=0, column=1, padx=10, pady=10)
 
     #images
-    car = Image.open("Authenticator\car.png")
-    resize_car = car.resize((400, 220))
-    car = ImageTk.PhotoImage(resize_car)
-    Label(frame, text="Vehicle Entry View", bg=light).grid(row=1, column=0, sticky=E+W)
-    Label(frame, image=car, bg=light).grid(row=2, column=0)
+    
+    # car = Image.open("Authenticator\car.png")
+    # resize_car = car.resize((400, 220))
+    # car = ImageTk.PhotoImage(resize_car)
+    Label(frame, text="Vehicle Entry View", bg=light).grid(row=1, column=0, sticky=E+W, columnspan=2)
+    # Label(frame, image=car, bg=light).grid(row=2, column=0)
+
+    app = Frame(frame, bg="white")
+    app.grid(row=2, column=0, columnspan=2)
+    # Create a label in the frame
+    lmain = Label(app)
+    lmain.grid(row=2, column=0, columnspan=2)
+
+    # video
+    cap = cv2.VideoCapture(0) #<-------------------------------------video source
+    def video_stream():
+        
+        _, frame = cap.read()
+        cv2image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGBA)
+        resize = cv2.resize(cv2image, (600,350))
+        img = Image.fromarray(resize)
+        imgtk = ImageTk.PhotoImage(image=img)
+        lmain.imgtk = imgtk
+        lmain.configure(image=imgtk)
+        lmain.after(1, video_stream) 
 
 
-    plate = Image.open("Authenticator\plate.png")
-    resize_plate = plate.resize((200, 100))
-    plate = ImageTk.PhotoImage(resize_plate)
+    #-----------------------------buttons
+    def exit_third():
+        third.destroy()
 
-    Label(frame, text="Number Plate View", bg=light).grid(row=3, column=0, sticky=E+W)
-    Label(frame, image=plate, bg=light).grid(row=4, column=0, sticky=E+W)
+    def enter_roi():
+        root = Toplevel()
+        root.title("ROI")
+        root.geometry("300x100")
+        root.resizable(False, False)
+        root.config(bg=dark)
+        # Create a frame
+        app = Frame(root, bg="white")
+        app.grid()
+        # Create a label in the frame
+        lmain = Label(app)
+        lmain.grid()
 
-    #table
+        # Capture from camera
+        cap = cv2.VideoCapture(0)
+
+        # function for video streaming
+        def video_stream():
+            _, frame = cap.read()
+            cv2image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGBA)
+            resize = cv2.resize(cv2image, (300,100))
+            img = Image.fromarray(resize)
+            imgtk = ImageTk.PhotoImage(image=img)
+            lmain.imgtk = imgtk
+            lmain.configure(image=imgtk)
+            lmain.after(1, video_stream) 
+
+
+        video_stream()
+        root.mainloop()
+
+    
+    Button(frame, text="Number Plate View", bg=buttoncol, border=0, fg=light, pady=5, command=enter_roi).grid(row=3, column=0, pady=10)
+    Button(frame, text="Exit", bg=buttoncol, border=0, fg=light, pady=5, padx=40, command=exit_third).grid(row=3, column=1, pady=10)
+    video_stream()
+    #table ----------------------------
 
     path = 'Authenticator\key.json'
     gc=pygsheets.authorize(service_account_file=path)
