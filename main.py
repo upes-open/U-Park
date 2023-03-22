@@ -95,7 +95,8 @@ def plate_read(a):
 
 #function to read video or webcam feed and detecting license plate numbers from those frames
 def ReadFromVideo(p):
-    l = []
+    #to store license plate number
+    L = []
     #cap = cv2.VideoCapture(p)
     flag = True
     #GUI window
